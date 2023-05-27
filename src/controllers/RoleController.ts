@@ -1,6 +1,6 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
 
-import { prisma } from '../data/prismaClient'
+import { prisma } from '../database/prismaClient'
 
 export class Role {
   async index(request: FastifyRequest, response: FastifyReply) {
@@ -10,7 +10,7 @@ export class Role {
       return roles
     } catch (error) {
       console.log(error)
-      response.code(500).send(error)
+      response.code(400).send({ message: error })
     }
   }
 }
