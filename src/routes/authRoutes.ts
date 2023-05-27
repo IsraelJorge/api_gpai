@@ -13,6 +13,9 @@ export async function authRoutes(app: FastifyInstance) {
         where: {
           email,
         },
+        include: {
+          role: true,
+        },
       })
 
       if (!user) {
@@ -32,7 +35,7 @@ export async function authRoutes(app: FastifyInstance) {
           id: user.id,
           name: user.name,
           email: user.email,
-          role: user.roleId,
+          role: user.role,
         },
         {
           sub: user.id.toString(),
@@ -44,7 +47,7 @@ export async function authRoutes(app: FastifyInstance) {
         id: user.id,
         name: user.name,
         email: user.email,
-        role: user.roleId,
+        role: user.role,
         token,
       })
     } catch (error) {
