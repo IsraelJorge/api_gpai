@@ -1,8 +1,9 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
 
-import { prisma } from '../data/prismaClient'
-import { idSchema } from '../data/schemas/idSchema'
-import { userSchema } from '../data/schemas/userSchema'
+import { prisma } from '../database/prismaClient'
+import { idSchema } from '../database/schemas/idSchema'
+import { userSchema } from '../database/schemas/userSchema'
+import { hashPassword } from '../utils/password-manager'
 
 export class User {
   async index(request: FastifyRequest, response: FastifyReply) {
@@ -11,14 +12,15 @@ export class User {
 
       return users
     } catch (error) {
-      return response.code(500).send(error)
+      response.code(400).send({ message: error })
     }
   }
 
   async create(request: FastifyRequest, response: FastifyReply) {
-    const { name, address, cpf, telephone, roleId } = userSchema.parse(
-      request.body,
-    )
+    const { name, address, cpf, telephone, roleId, email, password } =
+      userSchema.parse(request.body)
+
+    const hashedPassword = hashPassword(password)
 
     try {
       const user = await prisma.user.create({
@@ -27,6 +29,8 @@ export class User {
           address,
           cpf,
           telephone,
+          password: hashedPassword,
+          email,
           roleId,
         },
       })
@@ -35,7 +39,7 @@ export class User {
     } catch (error) {
       console.log(error)
 
-      response.code(500).send(error)
+      response.code(400).send({ message: error })
     }
   }
 
@@ -43,6 +47,8 @@ export class User {
     const { id } = idSchema.parse(request.params)
 
     try {
+      await request.jwtVerify()
+
       const user = await prisma.user.findUniqueOrThrow({
         where: {
           id,
@@ -51,7 +57,7 @@ export class User {
 
       return user
     } catch (error) {
-      response.code(500).send(error)
+      response.code(400).send({ message: error })
     }
   }
 
@@ -63,6 +69,8 @@ export class User {
     )
 
     try {
+      await request.jwtVerify()
+
       const user = await prisma.user.update({
         where: {
           id,
@@ -80,6 +88,8 @@ export class User {
     const { id } = idSchema.parse(request.params)
 
     try {
+      await request.jwtVerify()
+
       const user = await prisma.user.delete({
         where: {
           id,

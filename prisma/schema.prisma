@@ -11,11 +11,14 @@ datasource db {
 }
 
 model User {
-  id        Int    @id @unique @default(autoincrement())
+  id        Int      @id @unique @default(autoincrement())
   name      String
-  cpf       String @unique
+  cpf       String   @unique
+  email     String   @unique
+  password  String
   telephone String
   address   String
+  craetedAt DateTime @default(now())
 
   role   Role @relation(fields: [roleId], references: [id])
   roleId Int
