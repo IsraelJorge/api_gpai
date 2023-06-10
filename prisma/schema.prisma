@@ -49,8 +49,9 @@ model Animal {
   disability            Boolean
   vaccinated            Boolean
   disease               Boolean
-  disabilityDescription String
-  diseaseDescription    String
+  disabilityDescription String?
+  diseaseDescription    String?
+  craetedAt             DateTime @default(now())
 
   user   User @relation(fields: [userId], references: [id])
   userId Int
