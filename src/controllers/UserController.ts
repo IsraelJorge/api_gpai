@@ -5,8 +5,8 @@ import { idSchema } from '../database/schemas/idSchema'
 import { userSchema } from '../database/schemas/userSchema'
 import { hashPassword } from '../utils/password-manager'
 
-export class User {
-  async index(request: FastifyRequest, response: FastifyReply) {
+export class UserController {
+  static async index(request: FastifyRequest, response: FastifyReply) {
     try {
       const users = await prisma.user.findMany()
 
@@ -16,7 +16,7 @@ export class User {
     }
   }
 
-  async create(request: FastifyRequest, response: FastifyReply) {
+  static async create(request: FastifyRequest, response: FastifyReply) {
     const { name, address, cpf, telephone, roleId, email, password } =
       userSchema.parse(request.body)
 
@@ -43,7 +43,7 @@ export class User {
     }
   }
 
-  async show(request: FastifyRequest, response: FastifyReply) {
+  static async show(request: FastifyRequest, response: FastifyReply) {
     const { id } = idSchema.parse(request.params)
 
     try {
@@ -61,7 +61,7 @@ export class User {
     }
   }
 
-  async update(request: FastifyRequest, response: FastifyReply) {
+  static async update(request: FastifyRequest, response: FastifyReply) {
     const { id } = idSchema.parse(request.params)
 
     const { name, address, cpf, telephone, roleId } = userSchema.parse(
@@ -84,7 +84,7 @@ export class User {
     }
   }
 
-  async delete(request: FastifyRequest, response: FastifyReply) {
+  static async delete(request: FastifyRequest, response: FastifyReply) {
     const { id } = idSchema.parse(request.params)
 
     try {
@@ -102,5 +102,3 @@ export class User {
     }
   }
 }
-
-export const UserController = new User()

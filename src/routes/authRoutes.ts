@@ -25,9 +25,7 @@ export async function authRoutes(app: FastifyInstance) {
       const isPasswordCorrect = matchPassword(password, user.password)
 
       if (!isPasswordCorrect) {
-        return response
-          .code(401)
-          .send({ message: 'incorrect email or password' })
+        return response.code(401).send({ message: 'Email ou senha incorreta' })
       }
 
       const token = app.jwt.sign(
