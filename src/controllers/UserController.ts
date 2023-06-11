@@ -6,17 +6,17 @@ import { userSchema } from '../database/schemas/userSchema'
 import { hashPassword } from '../utils/password-manager'
 
 export class UserController {
-  static async index(request: FastifyRequest, response: FastifyReply) {
+  static async index(request: FastifyRequest, reply: FastifyReply) {
     try {
       const users = await prisma.user.findMany()
 
       return users
     } catch (error) {
-      response.code(400).send({ message: error })
+      reply.code(400).send({ message: error })
     }
   }
 
-  static async create(request: FastifyRequest, response: FastifyReply) {
+  static async create(request: FastifyRequest, reply: FastifyReply) {
     const { name, address, cpf, telephone, roleId, email, password } =
       userSchema.parse(request.body)
 
@@ -35,15 +35,15 @@ export class UserController {
         },
       })
 
-      return response.code(200).send(user)
+      return reply.code(200).send(user)
     } catch (error) {
       console.log(error)
 
-      response.code(400).send({ message: error })
+      reply.code(400).send({ message: error })
     }
   }
 
-  static async show(request: FastifyRequest, response: FastifyReply) {
+  static async show(request: FastifyRequest, reply: FastifyReply) {
     const { id } = idSchema.parse(request.params)
 
     try {
@@ -57,11 +57,11 @@ export class UserController {
 
       return user
     } catch (error) {
-      response.code(400).send({ message: error })
+      reply.code(400).send({ message: error })
     }
   }
 
-  static async update(request: FastifyRequest, response: FastifyReply) {
+  static async update(request: FastifyRequest, reply: FastifyReply) {
     const { id } = idSchema.parse(request.params)
 
     const { name, address, cpf, telephone, roleId } = userSchema.parse(
@@ -80,11 +80,11 @@ export class UserController {
 
       return user
     } catch (error) {
-      response.code(500).send(error)
+      reply.code(500).send(error)
     }
   }
 
-  static async delete(request: FastifyRequest, response: FastifyReply) {
+  static async delete(request: FastifyRequest, reply: FastifyReply) {
     const { id } = idSchema.parse(request.params)
 
     try {
@@ -98,7 +98,7 @@ export class UserController {
 
       return user
     } catch (error) {
-      response.code(500).send(error)
+      reply.code(500).send(error)
     }
   }
 }

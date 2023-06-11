@@ -23,6 +23,8 @@ model User {
   role   Role @relation(fields: [roleId], references: [id])
   roleId Int
 
+  Animal Animal[]
+
   @@map("users")
 }
 
@@ -33,4 +35,38 @@ model Role {
   User User[]
 
   @@map("roles")
+}
+
+model Animal {
+  id                    Int      @id @unique @default(autoincrement())
+  name                  String
+  specie                String
+  race                  String
+  stature               String
+  sex                   String
+  dateBirth             DateTime
+  description           String
+  disability            Boolean
+  vaccinated            Boolean
+  disease               Boolean
+  disabilityDescription String?
+  diseaseDescription    String?
+  craetedAt             DateTime @default(now())
+
+  user   User @relation(fields: [userId], references: [id])
+  userId Int
+
+  images ImageAnimal[]
+
+  @@map("animals")
+}
+
+model ImageAnimal {
+  id   Int    @id @unique @default(autoincrement())
+  urls String
+
+  animal   Animal @relation(fields: [animalId], references: [id])
+  animalId Int
+
+  @@map("image_animal")
 }
