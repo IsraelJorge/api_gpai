@@ -1,9 +1,10 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
 
 import { prisma } from '../database/prismaClient'
-import { Animal, animalSchema } from '../database/schemas/animalSchema'
+import { animalSchema } from '../database/schemas/animalSchema'
 import { idSchema } from '../database/schemas/idSchema'
 import { genereteUrlFile } from '../utils/genereteUrlFile'
+import { removeKeyObject } from '../utils/removeKeyObject'
 
 export class AnimalController {
   static async index(request: FastifyRequest, reply: FastifyReply) {
@@ -36,15 +37,12 @@ export class AnimalController {
       urlPhotos.push(url)
     }
 
-    const data = { ...dataAnimal } as Partial<Pick<Animal, 'photoFiles'>> &
-      Omit<Animal, 'photoFiles'>
-
-    delete data.photoFiles
+    const newDataAnimal = removeKeyObject(dataAnimal, 'photoFiles')
 
     try {
       const animal = await prisma.animal.create({
         data: {
-          ...data,
+          ...newDataAnimal,
           images: {
             create: {
               urls: urlPhotos.toString(),
@@ -93,10 +91,7 @@ export class AnimalController {
 
     const dataAnimal = animalSchema.parse(request.body)
 
-    const data = { ...dataAnimal } as Partial<Pick<Animal, 'photoFiles'>> &
-      Omit<Animal, 'photoFiles'>
-
-    delete data.photoFiles
+    const newDataAnimal = removeKeyObject(dataAnimal, 'photoFiles')
 
     try {
       await request.jwtVerify()
@@ -105,7 +100,7 @@ export class AnimalController {
         where: {
           id,
         },
-        data,
+        data: newDataAnimal,
       })
 
       return animal
