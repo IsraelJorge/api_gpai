@@ -8,6 +8,7 @@ import { hashPassword } from '../utils/password-manager'
 export class UserController {
   static async index(request: FastifyRequest, reply: FastifyReply) {
     try {
+      await request.jwtVerify()
       const users = await prisma.user.findMany()
 
       return users
