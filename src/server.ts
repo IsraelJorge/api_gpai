@@ -20,6 +20,9 @@ app.register(cors, {
 app.register(multipart, {
   addToBody: true,
   attachFieldsToBody: true,
+  limits: {
+    fileSize: 10_485_760, // 10MB
+  },
 })
 app.register(require('@fastify/formbody'))
 app.register(require('@fastify/static'), {
