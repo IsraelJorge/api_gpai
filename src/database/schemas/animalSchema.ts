@@ -4,7 +4,7 @@ export const animalSchema = z.object({
   name: z.string().min(3).nonempty(),
   specie: z.string().min(3).nonempty(),
   race: z.string().nonempty(),
-  stature: z.string().min(6).nonempty(),
+  stature: z.string().nonempty(),
   sex: z.string().nonempty(),
   dateBirth: z.string().nonempty(),
   description: z.string().nonempty(),
